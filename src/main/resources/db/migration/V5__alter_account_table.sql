@@ -1,0 +1,1 @@
+alter table account ADD CONSTRAINT account_employee_fk FOREIGN KEY (employee_id) REFERENCES employee(id);
