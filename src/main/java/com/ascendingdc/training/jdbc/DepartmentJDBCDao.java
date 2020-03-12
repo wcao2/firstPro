@@ -9,7 +9,7 @@ import java.util.List;
 public class DepartmentJDBCDao{
     static final String DBURL = "jdbc:postgresql://localhost:5431/db_wei";
     static final String USER = "admin";
-    static final String PASS = "password!";
+    static final String PASS = "password";
 
     public List<DepartmentJDBC> getDepartments(){
         List<DepartmentJDBC> departments=new ArrayList();
