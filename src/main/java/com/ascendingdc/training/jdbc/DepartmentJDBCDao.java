@@ -1,12 +1,18 @@
 package com.ascendingdc.training.jdbc;
 
 import com.ascendingdc.training.model.DepartmentJDBC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DepartmentJDBCDao{
+    private static Logger logger= LoggerFactory.getLogger(DepartmentJDBCDao.class);
+
     static final String DBURL = "jdbc:postgresql://localhost:5431/db_wei";
     static final String USER = "admin";
     static final String PASS = "password";
@@ -19,17 +25,20 @@ public class DepartmentJDBCDao{
 
         try{
             //1
-            System.out.println("connecting to database...");
+            logger.debug("connecting to database...");
+            //System.out.println("connecting to database...");
             conn= DriverManager.getConnection(DBURL,USER,PASS);
 
             //2
-            System.out.println("creating statement...");
+            logger.info("creating statement...");
+            //System.out.println("creating statement...");
             stmt=conn.createStatement();
             String sql;
             sql="SELECT * FROM department";
+            logger.warn(sql);
             rs=stmt.executeQuery(sql);
 
-            //itereator: hasNext() return true or false, next() what is the next object
+            //iterator: hasNext() return true or false, next() what is the next object
             while(rs.next()){
                 //Retrieve by column name
                 Long id=rs.getLong("id");
@@ -61,6 +70,8 @@ public class DepartmentJDBCDao{
 
     public static void main(String[] args){
         DepartmentJDBCDao deDao=new DepartmentJDBCDao();
-        System.out.println(deDao.getDepartments());
+    //waste computation cost
+        System.out.println(deDao.getDepartments().size()+" test");
     }
 }
+
