@@ -1,37 +1,27 @@
 package com.ascendingdc.training.model;
 
 public class AccountJDBC {
-    private long id;
-    private String name;
+    private Long id;
     private String account_type;
     private String balance ;
-    private String create_date;
+    private String createDate;
     private Long employe_id;
 
     public AccountJDBC(){}
-    public AccountJDBC(String name, String account_type, String balance,String create_date,Long employe_id){
-        this.name=name;
+    public AccountJDBC( String account_type, String balance,String createDate,Long employe_id){
         this.account_type=account_type;
         this.balance=balance;
-        this.create_date=create_date;
+        this.createDate=createDate;
         this.employe_id=employe_id;
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAccount_type() {
@@ -50,12 +40,12 @@ public class AccountJDBC {
         this.balance = balance;
     }
 
-    public String getCreate_date() {
-        return create_date;
+    public String getCreateDate() {
+        return createDate;
     }
 
-    public void setCreate_date(String create_date) {
-        this.create_date = create_date;
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
 
     public Long getEmploye_id() {

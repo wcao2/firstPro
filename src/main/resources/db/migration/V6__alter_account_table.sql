@@ -1,0 +1,1 @@
+alter table account alter column create_date drop default;

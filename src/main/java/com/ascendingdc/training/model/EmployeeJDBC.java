@@ -1,31 +1,33 @@
 package com.ascendingdc.training.model;
 
 public class EmployeeJDBC {
-    private long id;
+    private Long id;
     private String name;
     private String first_name;
-    private String last_name ;
+    private String last_name;
     private String email;
     private String address;
     private String hired_date;
     private Long department_id;
 
-    public EmployeeJDBC(){}
-    public EmployeeJDBC(String name, String first_name, String last_name,String email,String address,String hired_date,Long department_id){
-        this.name=name;
-        this.first_name=first_name;
-        this.last_name=last_name;
-        this.email=email;
-        this.address=address;
-        this.hired_date=hired_date;
-        this.department_id=department_id;
+    public EmployeeJDBC() {
     }
 
-    public long getId() {
+    public EmployeeJDBC(String name, String first_name, String last_name, String email, String address, String hired_date, Long department_id) {
+        this.name = name;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.address = address;
+        this.hired_date = hired_date;
+        this.department_id = department_id;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
