@@ -7,17 +7,17 @@ import java.util.Set;
 @Entity
 @Table(name = "employee")
 public class Employee {
+
     public Employee(){}
-    public Employee(String name, String first_name,String last_name,String email,String address,
-                    LocalDate hired_date){
+
+    public Employee(String name, String first_name,String last_name,String email,String address){
          this.name=name;
          this.first_name=first_name;
          this.last_name=last_name;
          this.email=email;
          this.address=address;
-         this.hired_date=hired_date;
-         //this.department_id=department_id;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,35 +33,23 @@ public class Employee {
     private String address;
     @Column(name = "hired_date")
     private LocalDate hired_date;
-//    due to many to one, just comment it
-//    @Column(name = "department_id")
-//    private Long department_id;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
     //mappedBy object in account.java which have JoinColumn
     //CascadeType in here means: when I delete employee, it will be deleted all the records on accounts
     @OneToMany(mappedBy = "employee",cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
-    private Set<Account> accounts;
+    private Set<Account> account;
 
 
     public Set<Account> getAccounts() {
-        return accounts;
+        return account;
     }
 
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
+    public void setAccounts(Set<Account> account) {
+        this.account = account;
     }
 
     public Long getId() {
@@ -127,4 +115,11 @@ public class Employee {
 //    public void setDepartment_id(Long department_id) {
 //        this.department_id = department_id;
 //    }
+    public Department getDepartment() {
+            return department;
+        }
+
+    public void setDepartment(Department department) {
+                this.department = department;
+    }
 }

@@ -14,7 +14,7 @@ public class Department {
         this.description=description;
         this.location=location;
     }
-    @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE,fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
     private List<Employee> employee;
 
     @Id

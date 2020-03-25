@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Properties;
 
 public class HibernateUtil {
+    //SessionFactory is used to instantiate the session object
     private static SessionFactory sessionFactory;
     private static Logger logger= LoggerFactory.getLogger(HibernateUtil.class);
 
