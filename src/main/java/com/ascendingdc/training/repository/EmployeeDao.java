@@ -11,5 +11,4 @@ public interface EmployeeDao{
     List<Employee> getEmployees();
     Employee getEmployeeByName(String name);
     boolean delete(Employee e);
-
 }

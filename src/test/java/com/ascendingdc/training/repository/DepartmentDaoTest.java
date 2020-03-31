@@ -1,5 +1,6 @@
 package com.ascendingdc.training.repository;
 
+import com.ascendingdc.training.init.AppBootstrap;
 import com.ascendingdc.training.model.Department;
 import com.ascendingdc.training.model.Employee;
 import org.hibernate.LazyInitializationException;
@@ -7,28 +8,34 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AppBootstrap.class)
 public class DepartmentDaoTest {
+    //every Spring injection use it
+    @Autowired
     private DepartmentDao departmentDao;
+    @Autowired
     private EmployeeDao employeeDao;
 
     private Employee e1;
-    //private Employee e2;
-//    private Department d1;
-//    private String depString="HR3";
 
     @Before
     public void init(){
-        departmentDao=new DepartmentDaoImpl();
+//        departmentDao=new DepartmentDaoImpl();
 //        d1=new Department();
 //        d1.setName(depString);
 //        d1.setDescription("random desc");
 //        d1.setLocation("US");
 //        d1=departmentDao.save(d1);
 //
-        employeeDao=new EmployeeDaoImpl();
+//        employeeDao=new EmployeeDaoImpl();
 //        e1=new Employee();
 //        e1.setName("zhang3");
 //        e1.setAddress("us");
@@ -83,10 +90,10 @@ public class DepartmentDaoTest {
 //        Assert.assertEquals(deptName,department.getName());
 //    }
 
-    @Test
-    public void deleteDepartmentTest(){
-         Department department=departmentDao.getDepartmentByName("lalala");
-         Assert.assertTrue(departmentDao.delete(department));
-
-    }
+//    @Test
+//    public void deleteDepartmentTest(){
+//         Department department=departmentDao.getDepartmentByName("lalala");
+//         Assert.assertTrue(departmentDao.delete(department));
+//
+//    }
 }

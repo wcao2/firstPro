@@ -7,9 +7,7 @@ import java.util.Set;
 @Entity
 @Table(name = "employee")
 public class Employee {
-
     public Employee(){}
-
     public Employee(String name, String first_name,String last_name,String email,String address){
          this.name=name;
          this.first_name=first_name;

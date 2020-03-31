@@ -1,5 +1,7 @@
 package com.ascendingdc.training.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public class Department {
         this.description=description;
         this.location=location;
     }
+
+    //only employee can take department, department can not take employee
+    @JsonIgnore
     @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
     private List<Employee> employee;
 

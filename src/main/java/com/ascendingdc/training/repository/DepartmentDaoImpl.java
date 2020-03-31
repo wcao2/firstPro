@@ -10,12 +10,16 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 //import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-//@Repository
+//DepartmentDaoImpl class generates instance will be viewed as dependency by Spring container(box)
+//when Spring lanuch, DepartmentDao dd=new DepartmentDaoImpl();
+@Repository
 public class DepartmentDaoImpl implements DepartmentDao{
     private Logger logger= LoggerFactory.getLogger(getClass());
 
@@ -55,10 +59,19 @@ public class DepartmentDaoImpl implements DepartmentDao{
     }
 
     @Override
-    public List<Department> getDepartmentWithChildren() {
-
-
-        return null;
+    public List<Department> getDepartmentsEager() {
+        String hql = "FROM Department as dept left join fetch dept.employee as em left join fetch em.account";
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        try {
+            Query<Department> query = session.createQuery(hql);
+            //return query.list();
+            return query.list().stream().distinct().collect(Collectors.toList());
+            //return query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+        }catch (Exception e){
+            logger.error("failure to retrieve departments and relevant emeployees",e);
+            session.close();
+            return null;
+        }
     }
 
     @Override

@@ -14,6 +14,6 @@ public interface DepartmentDao {
     Department getDepartmentLazyBy(Long id);//only take department
 
     List<Department> getDepartments();
-    List<Department> getDepartmentWithChildren();
+    List<Department> getDepartmentsEager();
     Department getDepartmentByName(String deptName);//by using deptName to get department obj
 }

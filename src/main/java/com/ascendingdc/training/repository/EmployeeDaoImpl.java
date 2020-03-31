@@ -49,7 +49,25 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public int updateEmployeeAddress(String name, String address) {
-        return 0;
+        String hql="update Employee as em set em.address=:address where em.name=:name";
+        int updatedCount;
+        Transaction transaction=null;
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        try {
+            Query<Employee> query=session.createQuery(hql);
+            query.setParameter("name",name);
+            query.setParameter("address",address);
+            transaction=session.beginTransaction();
+            updatedCount=query.executeUpdate();
+            transaction.commit();
+            session.close();
+            return updatedCount;
+        }catch (Exception e){
+            if(transaction!=null) transaction.rollback();
+            logger.error(e.getMessage());
+            session.close();
+            return 0;
+        }
     }
 
     @Override
@@ -92,7 +110,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
         }finally {
             session.close();
         }
-
     }
 
     @Override

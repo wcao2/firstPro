@@ -35,13 +35,12 @@ public class EmployeeDaoTest {
 //        int expectedNum=3;
 //        Assert.assertEquals(expectedNum,employees.size());
 //    }
-//    @Test
-//    PASS
-//    public void getEmployees(){
-//        List<Employee> employees=employeeDao.getEmployees();
-//        int expectedNum=1;
-//        Assert.assertEquals(expectedNum,employees.size());
-//    }
+    @Test
+    public void getEmployees(){
+        List<Employee> employees=employeeDao.getEmployees();
+        int expectedNum=4;
+        Assert.assertEquals(expectedNum,employees.size());
+    }
 
 //    @Test
 //    PASS
