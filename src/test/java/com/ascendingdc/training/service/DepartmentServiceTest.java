@@ -41,50 +41,51 @@ public class DepartmentServiceTest {
         Assert.assertEquals("entertainment",department.getName());
     }
 
-    @Test
+    @Test  //TODO
     public void deleteDepartment(){
         Department department=departmentService.getDepartmentByName("entertainment");
-        boolean var=departmentService.delete(department);
+        Long id=department.getId();
+        boolean var=departmentService.delete(id);
         Assert.assertTrue(var);
     }
 
     @Test
-    public void getDepartment(){
+    public void getDepartmentTest(){
         List<Department> departments=departmentService.getDepartments();
         int expectedNumofDept=2;
         Assert.assertEquals(expectedNumofDept,departments.size());
     }
 
     @Test
-    public void getDepartmentsEager(){
-        List<Department> departments=departmentService.getDepartmentsEager();
+    public void getDepartmentsLazyTest(){
+        List<Department> departments=departmentService.getDepartmentsLazy();
         int expectedNumofDept=2;
         Assert.assertEquals(expectedNumofDept,departments.size());
     }
 
     @Test
-    public void getDepartmentEagerById(){
+    public void getDepartmentEagerByIdTest(){
         Long id=2L;
         Department department=departmentService.getDepartmentEagerBy(id);
         Assert.assertEquals(id,department.getId());
     }
 
     @Test
-    public void getDepartmentLazyById(){
+    public void getDepartmentLazyByIdTest(){
         Long id=2L;
         Department department=departmentService.getDepartmentLazyBy(id);
         Assert.assertEquals(id,department.getId());
     }
 
     @Test
-    public void getDepartmentByName(){
+    public void getDepartmentByNameTest(){
         String deptName="R&D";
         Department department=departmentService.getDepartmentByName(deptName);
         Assert.assertEquals("R&D",department.getName());
     }
 
     @Test
-    public void updateDepartmentLocation(){
+    public void updateDepartmentLocationTest(){
         String deptName="R&D";
         String location="Beijing ChangAn Road 113";
         Department department=departmentService.getDepartmentByName(deptName);

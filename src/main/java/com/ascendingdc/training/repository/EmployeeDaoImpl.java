@@ -9,20 +9,23 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 //import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Repository
+@Repository
 public class EmployeeDaoImpl implements EmployeeDao {
-    private DepartmentDao departmentDao=new DepartmentDaoImpl();
+    @Autowired
+    private DepartmentDao departmentDao;
     private Logger logger= LoggerFactory.getLogger(getClass());
 
     @Override
     //pass
-    public boolean save(Employee employee, String deptName) {
+    public Employee save(Employee employee, String deptName) {
         Transaction transaction=null;
         Session session= HibernateUtil.getSessionFactory().openSession();
         try{
@@ -33,17 +36,17 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     session.save(employee);
                     transaction.commit();
                     session.close();
-                    return true;
+                    return employee;
                 }else{
                     logger.error("the department name does not exist");
-                    return false;
+                    return null;
                 }
         }
         catch (Exception exception){
             if(transaction!=null) transaction.rollback();
             logger.error(exception.getMessage());
             session.close();
-            return false;
+            return null;
         }
     }
 
@@ -72,7 +75,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     //PASS
-    public boolean delete(Employee e) {
+    public boolean delete(Long id) {
         String hql="DELETE Employee as emp where emp.id=:Id";
         int deletedCount;
         Transaction transaction=null;
@@ -80,7 +83,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         try {
             transaction=session.beginTransaction();
             Query<Employee> query=session.createQuery(hql);
-            query.setParameter("Id",e.getId());
+            query.setParameter("Id",id);
             deletedCount=query.executeUpdate();
             transaction.commit();
             session.close();
@@ -95,14 +98,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     //pass
-    public List<Employee> getEmployees() {
-        List<Employee> emps=new ArrayList<>();
-        String hql="FROM Employee em left join fetch em.account";
+    public List<Employee> getEmployeesAndDept() {
+        List<Employee> employees = new ArrayList<>();
+//        String hql="FROM Employee as e LEFT JOIN FETCH e.department ";
+        String hql="FROM Employee  ";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
             Query<Employee> query=session.createQuery(hql);
-            //new feature in JAVA8
-            return query.list().stream().distinct().collect(Collectors.toList());
+            employees=query.list();
+            session.close();
+            return employees;
         }
         catch (Exception e){
             logger.error("failure to retrieve data record",e);
@@ -114,19 +119,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public Employee getEmployeeByName(String employeeName) {
+        Transaction transaction=null;
+        if (employeeName==null) return null;
+        String hql="FROM Employee as em where lower(em.name)=:name";
+        //String hql="FROM Employee as em left join fetch em.account where em.name=:name";
         Session session=HibernateUtil.getSessionFactory().openSession();
-        String hql="FROM Employee as em left join fetch em.account where em.name=:name";
-        try {
-            Query<Employee> query=session.createQuery(hql);
-            query.setParameter("name",employeeName);
-            //Convenience method to return a single instance that matches the query, or null if the query returns no results.
-            return query.uniqueResult();
-        }
-        catch (Exception e){
-            logger.error("failure to retrieve employee by name");
-            return null;
-        }finally {
-            session.close();
-        }
+        transaction=session.beginTransaction();
+        Query<Employee> query=session.createQuery(hql);
+        query.setParameter("name",employeeName.toLowerCase());
+        Employee employee=query.uniqueResult();
+        transaction.commit();
+        session.close();
+        return employee;
+
     }
 }

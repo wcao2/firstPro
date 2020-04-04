@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AppBootstrap.class)
@@ -47,7 +46,7 @@ public class DepartmentDaoTest {
     public void tearDown(){
        // departmentDao.delete(d1);
 //        employeeDao.delete(e1);
-//        departmentDao.delete(d1);    //TODO
+//        departmentDao.delete(d1);
         System.out.println("================================finished test===============================");
     }
 

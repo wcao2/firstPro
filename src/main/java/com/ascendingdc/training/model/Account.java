@@ -1,17 +1,16 @@
 package com.ascendingdc.training.model;
 
-import org.hibernate.annotations.CreationTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "account")
 public class Account {
     public Account(){}
-    public Account(String name, String account_type, String balance, String createDate,long employe_id){}
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//1.01
@@ -31,9 +30,23 @@ public class Account {
     //lazy means only get the data from account(select * from account)
     //if I want to get employee,in HQL, use join fetc
     //fetch type(eager): HQL: select a from Account a join fetch a.employee.id=:Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="employee_id")
+    //@JsonIgnore 如果是lazy 要加上 因为lazy拿不到employee对象
     private Employee employee;
+
+    public Account(String account_type, BigDecimal balance, LocalDate createDate, Employee employee) {
+        this.account_type = account_type;
+        this.balance = balance;
+        this.createDate = createDate;
+        this.employee = employee;
+    }
+
+    public Account(String account_type, BigDecimal balance, Employee employee) {
+        this.account_type = account_type;
+        this.balance = balance;
+        this.employee = employee;
+    }
 
     public Employee getEmployee() {
         return employee;

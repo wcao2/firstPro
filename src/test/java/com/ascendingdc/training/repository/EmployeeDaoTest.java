@@ -7,18 +7,20 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeeDaoTest {
+    @Autowired
     private EmployeeDao employeeDao;
     //private String deptName="HR";
 
     @Before
     public void init(){
-        employeeDao=new EmployeeDaoImpl();
+
     }
 
     @After
@@ -36,9 +38,9 @@ public class EmployeeDaoTest {
 //        Assert.assertEquals(expectedNum,employees.size());
 //    }
     @Test
-    public void getEmployees(){
-        List<Employee> employees=employeeDao.getEmployees();
-        int expectedNum=4;
+    public void getEmployeesAndDeptTest(){
+        List<Employee> employees=employeeDao.getEmployeesAndDept();
+        int expectedNum=1;
         Assert.assertEquals(expectedNum,employees.size());
     }
 

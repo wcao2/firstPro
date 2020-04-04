@@ -1,17 +1,14 @@
 package com.ascendingdc.training.repository;
 
 import com.ascendingdc.training.model.Department;
-import com.ascendingdc.training.model.Employee;
 import com.ascendingdc.training.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-//import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +37,10 @@ public class DepartmentDaoImpl implements DepartmentDao{
             return null;
         }
     }
-
+    //11111111111111111111
     public List<Department> getDepartments() {
-        List<Department> deps=new ArrayList<>();//Diamond types are not supported at language level '5' if remove <Department>
-        String hql="FROM Department";
+        List<Department> deps=new ArrayList<>();
+        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
             Query<Department> query=session.createQuery(hql);
@@ -59,13 +56,13 @@ public class DepartmentDaoImpl implements DepartmentDao{
     }
 
     @Override
-    public List<Department> getDepartmentsEager() {
-        String hql = "FROM Department as dept left join fetch dept.employee as em left join fetch em.account";
+    public List<Department> getDepartmentsLazy() {
+        String hql = "FROM Department";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try {
             Query<Department> query = session.createQuery(hql);
-            //return query.list();
-            return query.list().stream().distinct().collect(Collectors.toList());
+            return query.list();
+//            return query.list().stream().distinct().collect(Collectors.toList());
             //return query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
         }catch (Exception e){
             logger.error("failure to retrieve departments and relevant emeployees",e);
@@ -110,7 +107,7 @@ public class DepartmentDaoImpl implements DepartmentDao{
     }
 
     @Override
-    public boolean delete(Department dep) {
+    public boolean delete(Long id) {
         String hql="DELETE Department as dep where dep.id=:Id";
         int deletedCount=0;
         Transaction transaction=null;
@@ -118,7 +115,7 @@ public class DepartmentDaoImpl implements DepartmentDao{
         try {
             transaction=session.beginTransaction();
             Query<Department> query=session.createQuery(hql);
-            query.setParameter("Id",dep.getId());
+            query.setParameter("Id",id);
             deletedCount=query.executeUpdate();
             transaction.commit();
             session.close();
@@ -157,7 +154,9 @@ public class DepartmentDaoImpl implements DepartmentDao{
     public Department getDepartmentByName(String deptName) {
         Transaction transaction=null;
         if(deptName==null) return null;
-        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account " +
+//        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account " +
+//                "where lower(dept.name)=:name";
+        String hql="FROM Department as dept " +
                 "where lower(dept.name)=:name";
         Session session=HibernateUtil.getSessionFactory().openSession();
         transaction=session.beginTransaction();
