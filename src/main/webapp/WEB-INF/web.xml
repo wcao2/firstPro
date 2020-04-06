@@ -115,5 +115,20 @@
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
+<!--  &lt;!&ndash;for test demoServlet&ndash;&gt;
+    <servlet>
+      <servlet-name>appServlet</servlet-name>
+       <servlet-class>com.ascendingdc.training.DemoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>-->
+<!--   <filter-mapping>
+        <filter-name>logFilter</filter-name>
+        &lt;!&ndash;/* 下的请求都要经过这个filter&ndash;&gt;
+        <url-pattern>/*</url-pattern>
+   </filter-mapping>-->
+
 </web-app>
         

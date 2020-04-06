@@ -2,7 +2,9 @@ package com.ascendingdc.training.controller;
 
 import com.ascendingdc.training.model.Department;
 import com.ascendingdc.training.model.Employee;
+import com.ascendingdc.training.model.views.DepartmentViews;
 import com.ascendingdc.training.service.EmployeeService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +24,24 @@ public class EmployeeController {
 
     //{prefix}/employees GET  //pass
     @RequestMapping(value="",method = RequestMethod.GET)
+    //@JsonView(DepartmentViews.Employee.class)
     public Employee getEmployeeByName(@RequestParam("employeeName") String employeeName){
-        Employee employee= employeeService.getEmployeeByName(employeeName);//?????????????????????????????????????????
+        Employee employee= employeeService.getEmployeeByName(employeeName);
         return employee;
     }
 
+    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    public Employee getEmployeeById(@PathVariable("id") Long Id){
+        Employee employee=employeeService.getEmployeeById(Id);
+        return employee;
+    }
 
+    @RequestMapping(value = "/{id}",method = RequestMethod.PATCH)
+    public Employee updateEmployeeAddress(@PathVariable("id") Long Id,@RequestParam("email") String email){
+        Employee employee=employeeService.getEmployeeById(Id);
+        employee.setEmail(email);
+        return employeeService.updateEmployeeEmail(employee);
+    }
 
     //{prefix}/employees DELETE   //PASS
     @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
@@ -37,7 +51,7 @@ public class EmployeeController {
         if(isSuccess){
             msg="the employee is successfully deleted";
         }else{
-            msg="failure to delete department";
+            msg="failure to delete employee";
         }
         return msg;
     }
@@ -52,6 +66,25 @@ public class EmployeeController {
         }else{
             return e;
         }
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

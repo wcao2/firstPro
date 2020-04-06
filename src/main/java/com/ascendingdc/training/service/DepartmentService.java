@@ -18,21 +18,30 @@ public class DepartmentService {
         return departmentDao.save(department);
     }
 
-    public List<Department> getDepartments(){
-        return departmentDao.getDepartments();
+    //1: get DeptById
+    public Department getDepartmentById(Long id){
+        return departmentDao.getDepartmentById(id);
     }
 
+    //2:get DeptByName
+    public Department getDepartmentByName(String deptName){
+        return departmentDao.getDepartmentByName(deptName);
+    }
+
+    //3
     public List<Department> getDepartmentsLazy(){
         return departmentDao.getDepartmentsLazy();
+    }
+
+    //4
+    public List<Department> getDepartmentsEager(){
+        return departmentDao.getDepartmentsEager();
     }
 
     public Department getDepartmentEagerBy(Long id){
         return departmentDao.getDepartmentEagerBy(id);
     }
 
-    public Department getDepartmentLazyBy(Long id){
-        return departmentDao.getDepartmentLazyBy(id);
-    }
 
     public boolean delete(Long id){
         return departmentDao.delete(id);
@@ -40,9 +49,23 @@ public class DepartmentService {
 
     public boolean update(Department dep){return departmentDao.update(dep);}
 
-    public Department getDepartmentByName(String deptName){
-        return departmentDao.getDepartmentByName(deptName);
-    }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,8 @@
 package com.ascendingdc.training.model;
 
+import com.ascendingdc.training.model.views.DepartmentViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -17,22 +19,23 @@ public class Account {
     @Column(name="id",columnDefinition = "SERIAL")
     private Long id;
     @Column(name = "account_type")
+    //@JsonView({DepartmentViews.Employee.class})
     private String account_type;
     @Column(name="balance")
+   // @JsonView({DepartmentViews.Employee.class})
     private BigDecimal balance ;
 
     @Column(name="create_date")
     private LocalDate createDate;
-//    @Column(name="employee_id")
-//    private Long employee_id;
+
 
     //have joincolumn is owing side
     //lazy means only get the data from account(select * from account)
     //if I want to get employee,in HQL, use join fetc
     //fetch type(eager): HQL: select a from Account a join fetch a.employee.id=:Id
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="employee_id")
-    //@JsonIgnore 如果是lazy 要加上 因为lazy拿不到employee对象
+    @JsonIgnore //如果是lazy 要加上 因为lazy拿不到employee对象
     private Employee employee;
 
     public Account(String account_type, BigDecimal balance, LocalDate createDate, Employee employee) {

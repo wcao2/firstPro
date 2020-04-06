@@ -37,10 +37,69 @@ public class DepartmentDaoImpl implements DepartmentDao{
             return null;
         }
     }
-    //11111111111111111111
-    public List<Department> getDepartments() {
+
+    //1 getDepartmentById
+    @Override
+    public Department getDepartmentById(Long id) {
+        String hql="FROM Department d where d.id=:Id";
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        try{
+            Query<Department> query=session.createQuery(hql);
+            query.setParameter("Id",id);
+            Department result=query.uniqueResult();
+            session.close();
+            return result;
+        }catch (HibernateException e){
+            logger.error("failure to retrieve data record",e);
+            session.close();
+            return null;
+        }
+    }
+
+    //2: getDeptByName
+    @Override
+    public Department getDepartmentByName(String deptName) {
+        Transaction transaction=null;
+        if(deptName==null) return null;
+//        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account " +
+//                "where lower(dept.name)=:name";
+        String hql="FROM Department as dept " +
+                "where lower(dept.name)=:name";
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        transaction=session.beginTransaction();
+        Query<Department> query=session.createQuery(hql);
+        query.setParameter("name",deptName.toLowerCase());
+        Department department=query.uniqueResult();
+        transaction.commit();
+        session.close();
+        return department;
+    }
+
+    //3
+    @Override
+    public List<Department> getDepartmentsLazy() {
+        String hql = "FROM Department";
         List<Department> deps=new ArrayList<>();
-        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account";
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        try {
+            Query<Department> query = session.createQuery(hql);
+            deps= query.list();
+            session.close();
+            return deps;
+//            return query.list().stream().distinct().collect(Collectors.toList());
+            //return query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+        }catch (Exception e){
+            logger.error("failure to retrieve departments and relevant emeployees",e);
+            session.close();
+            return null;
+        }
+    }
+
+    //4
+    public List<Department> getDepartmentsEager() {
+        List<Department> deps=new ArrayList<>();
+//        String hql="SELECT distinct dept FROM Department as dept left join fetch dept.employee as em left join fetch em.account";
+        String hql="FROM Department";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
             Query<Department> query=session.createQuery(hql);
@@ -55,21 +114,7 @@ public class DepartmentDaoImpl implements DepartmentDao{
         }
     }
 
-    @Override
-    public List<Department> getDepartmentsLazy() {
-        String hql = "FROM Department";
-        Session session=HibernateUtil.getSessionFactory().openSession();
-        try {
-            Query<Department> query = session.createQuery(hql);
-            return query.list();
-//            return query.list().stream().distinct().collect(Collectors.toList());
-            //return query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
-        }catch (Exception e){
-            logger.error("failure to retrieve departments and relevant emeployees",e);
-            session.close();
-            return null;
-        }
-    }
+
 
     @Override
     public Department getDepartmentEagerBy(Long id) {
@@ -89,22 +134,7 @@ public class DepartmentDaoImpl implements DepartmentDao{
 
     }
 
-    @Override
-    public Department getDepartmentLazyBy(Long id) {
-        String hql="FROM Department d where d.id=:Id";
-        Session session=HibernateUtil.getSessionFactory().openSession();
-        try{
-            Query<Department> query=session.createQuery(hql);
-            query.setParameter("Id",id);
-            Department result=query.uniqueResult();
-            session.close();
-            return result;
-        }catch (HibernateException e){
-            logger.error("failure to retrieve data record",e);
-            session.close();
-            return null;
-        }
-    }
+
 
     @Override
     public boolean delete(Long id) {
@@ -150,21 +180,19 @@ public class DepartmentDaoImpl implements DepartmentDao{
         return isSuccess;
     }
 
-    @Override
-    public Department getDepartmentByName(String deptName) {
-        Transaction transaction=null;
-        if(deptName==null) return null;
-//        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account " +
-//                "where lower(dept.name)=:name";
-        String hql="FROM Department as dept " +
-                "where lower(dept.name)=:name";
-        Session session=HibernateUtil.getSessionFactory().openSession();
-        transaction=session.beginTransaction();
-        Query<Department> query=session.createQuery(hql);
-        query.setParameter("name",deptName.toLowerCase());
-        Department department=query.uniqueResult();
-        transaction.commit();
-        session.close();
-        return department;
-    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

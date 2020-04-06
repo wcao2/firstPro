@@ -60,11 +60,11 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void updateEmployeeAddressTest(){
-        String employeeName="Jason";
-        Employee employee=employeeService.getEmployeeByName(employeeName);
-        employee.setAddress("fairfax road");
-        int num=employeeService.updateEmployeeAddress(employee.getName(),employee.getAddress());
-        Assert.assertEquals(1,num);
+    public void updateEmailTest(){
+        String email="dwang111@training.ascendingdc.com";
+        Employee employee=employeeService.getEmployeeById(1L);
+        employee.setEmail(email);
+        Employee e=employeeService.updateEmployeeEmail(employee);
+        Assert.assertEquals("dwang111@training.ascendingdc.com",e.getEmail());
     }
 }

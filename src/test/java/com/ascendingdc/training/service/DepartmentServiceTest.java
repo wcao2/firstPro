@@ -51,7 +51,7 @@ public class DepartmentServiceTest {
 
     @Test
     public void getDepartmentTest(){
-        List<Department> departments=departmentService.getDepartments();
+        List<Department> departments=departmentService.getDepartmentsEager();
         int expectedNumofDept=2;
         Assert.assertEquals(expectedNumofDept,departments.size());
     }
@@ -71,9 +71,9 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void getDepartmentLazyByIdTest(){
+    public void getDepartmentByIdTest(){
         Long id=2L;
-        Department department=departmentService.getDepartmentLazyBy(id);
+        Department department=departmentService.getDepartmentById(id);
         Assert.assertEquals(id,department.getId());
     }
 

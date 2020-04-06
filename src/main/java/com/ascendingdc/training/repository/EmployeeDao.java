@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface EmployeeDao{
     Employee save(Employee employee,String deptName);
-    int updateEmployeeAddress(String name,String address);
-    List<Employee> getEmployeesAndDept();
+    Employee updateEmployeeEmail(Employee e);
 
+    List<Employee> getEmployeesAndDept();
+    Employee getEmployeeById(Long Id);
     Employee getEmployeeByName(String employeeName);
+
     boolean delete(Long id);
 }

@@ -1,7 +1,9 @@
 package com.ascendingdc.training.model;
 
+import com.ascendingdc.training.model.views.DepartmentViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -22,7 +24,9 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@JsonView({DepartmentViews.Employee.class})//DepartmentViews.Manager.class,
     private Long id;
+    //@JsonView({DepartmentViews.Employee.class})
     @Column(name = "name")
     private String name;
     @Column(name = "first_name")
@@ -36,17 +40,22 @@ public class Employee {
     @Column(name = "hired_date")
     private LocalDate hired_date;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
+    //@JsonIgnore
+    //@JsonView({DepartmentViews.Employee.class})
+    @JsonIgnoreProperties({"employee"})
     private Department department;
 
     //mappedBy object in account.java which have JoinColumn
     //CascadeType in here means: when I delete employee, it will be deleted all the records on accounts
     @JsonIgnore
-    @OneToMany(mappedBy = "employee",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "employee",cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+   // @JsonView({DepartmentViews.Employee.class})
     private Set<Account> account;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="employees_roles",joinColumns = {@JoinColumn(name="employee_id")},inverseJoinColumns = {@JoinColumn(name="role_id")})
     @JsonIgnore
     private List<Role> roles;

@@ -1,19 +1,45 @@
 package com.ascendingdc.training.repository;
 
 import com.ascendingdc.training.model.Department;
-import com.ascendingdc.training.model.Employee;
 
 import java.util.List;
 
 public interface DepartmentDao {
-    Department save(Department department);//create
+    Department save(Department department);
+    //1
+    Department getDepartmentById(Long id);
+    //2
+    Department getDepartmentByName(String deptName);
+    //3
+    List<Department> getDepartmentsLazy();
+    //4
+    List<Department> getDepartmentsEager();
+
     boolean delete(Long id);//delete
     boolean update(Department dep);//Update
 
     Department getDepartmentEagerBy(Long id);//take out department, and take all of the employees related to this department
-    Department getDepartmentLazyBy(Long id);//only take department
 
-    List<Department> getDepartments();
-    List<Department> getDepartmentsLazy();
-    Department getDepartmentByName(String deptName);//by using deptName to get department obj
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

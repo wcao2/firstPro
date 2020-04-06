@@ -18,8 +18,8 @@ public class EmployeeService {
         return employeeDao.save(emp,deptName);
     }
 
-    public int updateEmployeeAddress(String name,String address){
-        return employeeDao.updateEmployeeAddress(name,address);
+    public Employee updateEmployeeEmail(Employee e){
+        return employeeDao.updateEmployeeEmail(e);
     }
 
     public List<Employee> getEmployeesAndDept(){
@@ -33,4 +33,33 @@ public class EmployeeService {
     public boolean delete(Long id){
         return employeeDao.delete(id);
     }
+
+    public Employee getEmployeeById(Long id){
+        return employeeDao.getEmployeeById(id);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

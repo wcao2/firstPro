@@ -51,25 +51,20 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public int updateEmployeeAddress(String name, String address) {
-        String hql="update Employee as em set em.address=:address where em.name=:name";
-        int updatedCount;
+    public Employee updateEmployeeEmail(Employee e) {
         Transaction transaction=null;
         Session session=HibernateUtil.getSessionFactory().openSession();
         try {
-            Query<Employee> query=session.createQuery(hql);
-            query.setParameter("name",name);
-            query.setParameter("address",address);
             transaction=session.beginTransaction();
-            updatedCount=query.executeUpdate();
+            session.update(e);
             transaction.commit();
             session.close();
-            return updatedCount;
-        }catch (Exception e){
+            return e;
+        }catch (Exception exception){
             if(transaction!=null) transaction.rollback();
-            logger.error(e.getMessage());
+            logger.error(exception.getMessage());
             session.close();
-            return 0;
+            return null;
         }
     }
 
@@ -93,15 +88,15 @@ public class EmployeeDaoImpl implements EmployeeDao {
             if(transaction!=null) transaction.rollback();
             session.close();
             logger.error("unable to delete record",exception);
+            return false;
         }
-        return false;
     }
 
-    //pass
+    //pass   1
     public List<Employee> getEmployeesAndDept() {
         List<Employee> employees = new ArrayList<>();
-//        String hql="FROM Employee as e LEFT JOIN FETCH e.department ";
-        String hql="FROM Employee  ";
+        String hql="FROM Employee as e LEFT JOIN FETCH e.department";
+        //String hql="FROM Employee  ";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
             Query<Employee> query=session.createQuery(hql);
@@ -118,6 +113,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
+    public Employee getEmployeeById(Long Id) {
+        Transaction transaction=null;
+        if(Id==null) return null;
+        String hql="FROM Employee as emp " +
+                "where emp.id=:id";
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        transaction=session.beginTransaction();
+        Query<Employee> query=session.createQuery(hql);
+        query.setParameter("id",Id);
+        Employee employee=query.uniqueResult();
+        transaction.commit();
+        session.close();
+        return employee;
+    }
+
+    @Override  //2
     public Employee getEmployeeByName(String employeeName) {
         Transaction transaction=null;
         if (employeeName==null) return null;
@@ -134,3 +145,23 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

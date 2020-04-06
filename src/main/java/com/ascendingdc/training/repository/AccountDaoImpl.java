@@ -27,7 +27,7 @@ public class AccountDaoImpl implements AccountDao{
             return query.uniqueResult();
         }
         catch (Exception e){
-            logger.error("failure to retrieve employee by name");
+            logger.error("failure to retrieve Account details");
             return null;
         }finally {
             session.close();
@@ -46,7 +46,7 @@ public class AccountDaoImpl implements AccountDao{
             return account;
         }catch (Exception exception){
             if(transaction!=null) transaction.rollback();
-            logger.error("failure to insert record into Employee table");
+            logger.error("failure to insert record into Account table");
             session.close();
             return null;
         }
@@ -71,9 +71,22 @@ public class AccountDaoImpl implements AccountDao{
             if(transaction!=null) transaction.rollback();
             session.close();
             logger.error("unable to delete record",exception);
+            return false;
         }
-        return false;
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

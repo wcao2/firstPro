@@ -1,7 +1,9 @@
 package com.ascendingdc.training.model;
 
+import com.ascendingdc.training.model.views.DepartmentViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,22 +21,26 @@ public class Department {
     }
 
     //only employee can take department, department can not take employee
-    @JsonIgnore
-    //对于department对象来说转换employee的时候不转换department 但对employee对象来说 直接转换employee不会影响department 意思getemployees还是会显示department
-    //department下的employee所有信息都能显示 除了department
+//    @JsonIgnore
     @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE, fetch=FetchType.EAGER)
-    //@JsonIgnoreProperties({"department","account"})
+    //对于department对象来说,转换employee的时候不转换employee下的
+    // department 但对employee对象来说 直接转换employee不会影响department 意思getemployees还是会显示department
+    @JsonIgnoreProperties({"department","account","roles"})    //department下的employee所有信息都能显示 除了department account roles
+    //@JsonView({DepartmentViews.Manager.class})
     private List<Employee> employee;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//1.01
     @Column(name="id",columnDefinition = "SERIAL")
+    //@JsonView({DepartmentViews.Manager.class,DepartmentViews.Employee.class})
     private Long id;
 
     @Column(name="name")
+    //@JsonView({DepartmentViews.Manager.class,DepartmentViews.Employee.class})
     private String name;
 
     @Column(name="description")
+    //@JsonView({DepartmentViews.Manager.class})
     private String description;
 
     @Column(name="location")

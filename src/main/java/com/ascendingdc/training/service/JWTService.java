@@ -40,6 +40,10 @@ public class JWTService {
     }
 
     public void decyptToken(String token){
-
+        //This line will throw an exception if it is not a signed JWS (as expected)
+//        Claims claims = Jwts.parser()
+//                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+//                .parseClaimsJws(jwt).getBody();
+//        return claims;
     }
 }

@@ -1,7 +1,9 @@
 package com.ascendingdc.training.controller;
 
 import com.ascendingdc.training.model.Department;
+import com.ascendingdc.training.model.views.DepartmentViews;
 import com.ascendingdc.training.service.DepartmentService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,36 +13,42 @@ import java.util.List;
 @RestController
 @RequestMapping(value={"/departments","/depts"})//this is a uri
 public class DepartmentController {
+
     @Autowired private DepartmentService departmentService;
     //@Autowired private Logger logger;   TODO
 
 
-    //{prefix}/departments GET    //11111111111111111111
-    @RequestMapping(value="/list/eager",method = RequestMethod.GET)
-    public List<Department> getDepartments(){
-        List<Department> dept=departmentService.getDepartments();
-        return dept;
+    //{prefix}/departments GET    TEST PASS     1:getDepartmentById(id)
+    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    //pass variable 尽量用id
+    public Department getDepartmentById(@PathVariable("id") Long id){
+        return departmentService.getDepartmentById(id);
     }
-    //{prefix}/departments GET
+
+    //{prefix}/department GET             TEST PASS   2:getDepartmentByName
+    @RequestMapping(value ="",method = RequestMethod.GET)
+    //@JsonView(DepartmentViews.Employee.class)
+    public Department getDepartmentByName(@RequestParam("deptName") String deptName){
+        Department department=departmentService.getDepartmentByName(deptName);
+        return department;
+    }
+
+    //{prefix}/departments GET   3:
     @RequestMapping(value="/list",method = RequestMethod.GET)
+    //@JsonView(DepartmentViews.Employee.class)
     public List<Department> getDepartmentsLazy(){
         List<Department> dept=departmentService.getDepartmentsLazy();
         return dept;
     }
 
-    //{prefix}/departments GET    TEST PASS
-    @RequestMapping(value="/{id}",method = RequestMethod.GET)
-    //pass variable 尽量用id
-    public Department getDeptBy(@PathVariable("id") Long id){
-        return departmentService.getDepartmentLazyBy(id);
+    //{prefix}/departments GET   //4
+    @RequestMapping(value="/list/eager",method = RequestMethod.GET)
+    //@JsonView(DepartmentViews.Employee.class)
+    public List<Department> getDepartmentsEager(){
+        List<Department> dept=departmentService.getDepartmentsEager();
+        return dept;
     }
 
-    //{prefix}/department GET             TEST PASS
-    @RequestMapping(value ="",method = RequestMethod.GET)
-    public Department getDepartmentByName(@RequestParam("deptName") String deptName){
-        Department department=departmentService.getDepartmentByName(deptName);
-        return department;
-    }
 
     //{prefix}/departments POST   TEST PASS
     @RequestMapping(value="",method = RequestMethod.POST)
@@ -83,3 +91,29 @@ public class DepartmentController {
         return msg;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
