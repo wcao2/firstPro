@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value={"/auth"})
@@ -21,18 +23,23 @@ public class AuthController {
     private Logger logger= LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="",method=RequestMethod.POST)
+    //ResponseEntity return token and status code
     public ResponseEntity userLogin(@RequestBody Employee employee){//jackson Serialization only can do set(from postman)
         try {
             Employee emp=null;
             //login with username or email
-            if(employee.getName()==null){
+            if(employee.getName()==null&&employee.getEmail()!=null){
                 emp=employeeService.getEmployeeByCredentials(employee.getEmail(),employee.getPassword());
-            }else{
+            }else if(employee.getEmail()==null&&employee.getName()!=null){
                 emp=employeeService.getEmployeeByCredentials(employee.getName(),employee.getPassword());
+            }else{
+                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();//HOW TO ADD A MESSAGE SEND TO FRONT
             }
             //return token is json format
             if(emp==null) return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
-            return ResponseEntity.ok().body(jwtService.generateToken(emp));//body自带build function
+            Map<String,String> map=new HashMap<>();
+            map.put("token",jwtService.generateToken(emp));
+            return ResponseEntity.ok().body(map);//body自带build function
         }catch (Exception e){
             e.printStackTrace();
         }
