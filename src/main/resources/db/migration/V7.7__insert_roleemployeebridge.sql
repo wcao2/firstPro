@@ -20,3 +20,10 @@ insert into account(account_type,employee_id) values ('credit',1),('debit',2);
 
 
 
+insert into employees_roles values
+(1, 1),
+(2, 2),
+(3, 3),
+(1, 2),
+(1, 3)
+;

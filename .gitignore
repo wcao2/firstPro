@@ -2,4 +2,7 @@
 target/
 .idea
 
-src/main/java/com/ascendingdc/training/util/
+src/main/java/com/ascendingdc/training/DemoServlet.java
+src/main/java/com/ascendingdc/training/LoggerFilter.java
+
+README.md

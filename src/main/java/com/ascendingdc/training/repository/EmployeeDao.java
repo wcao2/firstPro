@@ -14,4 +14,6 @@ public interface EmployeeDao{
     Employee getEmployeeByName(String employeeName);
 
     boolean delete(Long id);
+
+    Employee getEmployeeByCredentials(String email,String password) throws Exception;
 }

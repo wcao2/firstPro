@@ -1,8 +1,6 @@
 package com.ascendingdc.training.model;
 
-import com.ascendingdc.training.model.views.DepartmentViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

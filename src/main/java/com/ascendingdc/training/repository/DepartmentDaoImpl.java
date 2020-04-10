@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 //DepartmentDaoImpl class generates instance will be viewed as dependency by Spring container(box)
@@ -61,8 +63,6 @@ public class DepartmentDaoImpl implements DepartmentDao{
     public Department getDepartmentByName(String deptName) {
         Transaction transaction=null;
         if(deptName==null) return null;
-//        String hql="FROM Department as dept left join fetch dept.employee as em left join fetch em.account " +
-//                "where lower(dept.name)=:name";
         String hql="FROM Department as dept " +
                 "where lower(dept.name)=:name";
         Session session=HibernateUtil.getSessionFactory().openSession();
@@ -97,20 +97,19 @@ public class DepartmentDaoImpl implements DepartmentDao{
 
     //4
     public List<Department> getDepartmentsEager() {
-        List<Department> deps=new ArrayList<>();
 //        String hql="SELECT distinct dept FROM Department as dept left join fetch dept.employee as em left join fetch em.account";
-        String hql="FROM Department";
+        String hql="FROM Department d LEFT JOIN FETCH d.employee";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
             Query<Department> query=session.createQuery(hql);
-            deps= query.list();
-            session.close();
-            return deps;
+            //remove duplicate
+            return query.list().stream().distinct().collect(Collectors.toList());
         }
         catch (Exception e){
             logger.error("failure to retrieve data record",e);
+            return null;
+        }finally {
             session.close();
-            return deps;
         }
     }
 

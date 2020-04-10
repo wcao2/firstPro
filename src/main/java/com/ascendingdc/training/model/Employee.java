@@ -1,9 +1,10 @@
 package com.ascendingdc.training.model;
 
-import com.ascendingdc.training.model.views.DepartmentViews;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ascendingdc.training.model.views.JsView;
+import com.ascendingdc.training.model.views.JsView1;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,40 +25,55 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@JsonView({DepartmentViews.Employee.class})//DepartmentViews.Manager.class,
+    @JsonView({JsView.Anonymous.class})
     private Long id;
-    //@JsonView({DepartmentViews.Employee.class})
+
     @Column(name = "name")
+    @JsonView({JsView.User.class, JsView1.User1.class})
     private String name;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "first_name")
+    @JsonView({JsView.User.class})
     private String first_name;
+
     @Column(name = "last_name")
+    @JsonView({JsView.User.class})
     private String last_name ;
+
     @Column(name = "email")
+    @JsonView({JsView.User.class,JsView1.User1.class})
     private String email;
+
     @Column(name = "address")
+    @JsonView({JsView.User.class,JsView1.User1.class})
     private String address;
+
     @Column(name = "hired_date")
+    @JsonView({JsView.User.class})
+    @CreationTimestamp
     private LocalDate hired_date;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    //@JsonIgnore
-    //@JsonView({DepartmentViews.Employee.class})
-    @JsonIgnoreProperties({"employee"})
+    @JsonView({JsView.User.class})
     private Department department;
 
     //mappedBy object in account.java which have JoinColumn
     //CascadeType in here means: when I delete employee, it will be deleted all the records on accounts
-    @JsonIgnore
+    // @JsonIgnore
     @OneToMany(mappedBy = "employee",cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+    @JsonView({JsView.Admin.class})
    // @JsonView({DepartmentViews.Employee.class})
     private Set<Account> account;
 
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="employees_roles",joinColumns = {@JoinColumn(name="employee_id")},inverseJoinColumns = {@JoinColumn(name="role_id")})
-    @JsonIgnore
+    @JsonView({JsView.Admin.class})
+    //@JsonIgnore
     private List<Role> roles;
 
     public List<Role> getRoles() {
@@ -139,4 +155,10 @@ public class Employee {
     public void setDepartment(Department department) {
                 this.department = department;
     }
+
+    public String getPassword() {return password; }
+
+    //in my project, I use 封装 to encrypt my password and use set method to set my password
+    //封装： we 封装 logic in Java class, other people can invoke without knowing the logic
+    public void setPassword(String password) {this.password = DigestUtils.md5Hex(password.trim()); }
 }

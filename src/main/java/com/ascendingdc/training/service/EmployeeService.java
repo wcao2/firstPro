@@ -37,8 +37,9 @@ public class EmployeeService {
     public Employee getEmployeeById(Long id){
         return employeeDao.getEmployeeById(id);
     }
-}
 
+    public Employee getEmployeeByCredentials(String email, String password) throws Exception {return employeeDao.getEmployeeByCredentials(email,password);}
+}
 
 
 

@@ -1,7 +1,8 @@
 package com.ascendingdc.training.controller;
 
 import com.ascendingdc.training.model.Department;
-import com.ascendingdc.training.model.views.DepartmentViews;
+import com.ascendingdc.training.model.views.JsView;
+import com.ascendingdc.training.model.views.JsView1;
 import com.ascendingdc.training.service.DepartmentService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,16 @@ public class DepartmentController {
     //@Autowired private Logger logger;   TODO
 
 
-    //{prefix}/departments GET    TEST PASS     1:getDepartmentById(id)
-    @RequestMapping(value="/{id}",method = RequestMethod.GET)
-    //pass variable 尽量用id
+    //{prefix}/departments GET        1:getDepartmentById(id)
+    @RequestMapping(value="/{id}",method = RequestMethod.GET)    //pass variable 尽量用id
+    @JsonView({JsView.User.class})
     public Department getDepartmentById(@PathVariable("id") Long id){
         return departmentService.getDepartmentById(id);
     }
 
-    //{prefix}/department GET             TEST PASS   2:getDepartmentByName
+    //{prefix}/department GET              2:getDepartmentByName
     @RequestMapping(value ="",method = RequestMethod.GET)
-    //@JsonView(DepartmentViews.Employee.class)
+    @JsonView(JsView.User.class)
     public Department getDepartmentByName(@RequestParam("deptName") String deptName){
         Department department=departmentService.getDepartmentByName(deptName);
         return department;
@@ -35,7 +36,7 @@ public class DepartmentController {
 
     //{prefix}/departments GET   3:
     @RequestMapping(value="/list",method = RequestMethod.GET)
-    //@JsonView(DepartmentViews.Employee.class)
+    @JsonView(JsView.User.class)
     public List<Department> getDepartmentsLazy(){
         List<Department> dept=departmentService.getDepartmentsLazy();
         return dept;
@@ -43,15 +44,16 @@ public class DepartmentController {
 
     //{prefix}/departments GET   //4
     @RequestMapping(value="/list/eager",method = RequestMethod.GET)
-    //@JsonView(DepartmentViews.Employee.class)
+    @JsonView(JsView1.User1.class)
     public List<Department> getDepartmentsEager(){
         List<Department> dept=departmentService.getDepartmentsEager();
         return dept;
     }
 
 
-    //{prefix}/departments POST   TEST PASS
+    //{prefix}/departments POST
     @RequestMapping(value="",method = RequestMethod.POST)
+    @JsonView(JsView.User.class)
     public Department createDepartment(@RequestBody Department department){
         String msg;
         Department d=departmentService.save(department);
@@ -59,8 +61,9 @@ public class DepartmentController {
         return d;
     }
 
-    //{prefix}/departments PUT    //PASS
+    //{prefix}/departments PUT
     @RequestMapping(value = "",method = RequestMethod.PUT)
+    @JsonView(JsView.User.class)
     public String updateDepartment(@RequestBody Department department){
         //can not update deptName
         Department d1=departmentService.getDepartmentByName(department.getName());
@@ -78,7 +81,7 @@ public class DepartmentController {
         return msg;
     }
 
-    //{prefix}/departments DELETE   //PASS
+    //{prefix}/departments DELETE
     @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
     public String deleteDepartment(@PathVariable("id") Long id){//should be id
         String msg=null;

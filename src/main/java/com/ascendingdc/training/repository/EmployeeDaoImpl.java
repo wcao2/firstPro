@@ -96,7 +96,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
     public List<Employee> getEmployeesAndDept() {
         List<Employee> employees = new ArrayList<>();
         String hql="FROM Employee as e LEFT JOIN FETCH e.department";
-        //String hql="FROM Employee  ";
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
             Query<Employee> query=session.createQuery(hql);
@@ -114,16 +113,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public Employee getEmployeeById(Long Id) {
-        Transaction transaction=null;
         if(Id==null) return null;
-        String hql="FROM Employee as emp " +
-                "where emp.id=:id";
+        String hql="FROM Employee as em LEFT JOIN FETCH em.department where em.id=:id";
         Session session=HibernateUtil.getSessionFactory().openSession();
-        transaction=session.beginTransaction();
+
         Query<Employee> query=session.createQuery(hql);
         query.setParameter("id",Id);
         Employee employee=query.uniqueResult();
-        transaction.commit();
         session.close();
         return employee;
     }
@@ -132,7 +128,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     public Employee getEmployeeByName(String employeeName) {
         Transaction transaction=null;
         if (employeeName==null) return null;
-        String hql="FROM Employee as em where lower(em.name)=:name";
+        String hql="FROM Employee as em LEFT JOIN FETCH em.department where lower(em.name)=:name";
         //String hql="FROM Employee as em left join fetch em.account where em.name=:name";
         Session session=HibernateUtil.getSessionFactory().openSession();
         transaction=session.beginTransaction();
@@ -142,7 +138,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
         transaction.commit();
         session.close();
         return employee;
+    }
 
+
+    @Override
+    public Employee getEmployeeByCredentials(String email, String password) throws Exception {
+        String hql = "FROM Employee as e where (lower(e.email) = :email or lower(e.name) =:email) and e.password = :password";
+        //logger.debug(String.format("User email: %s, password: %s", email, password));
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Employee> query = session.createQuery(hql);
+            query.setParameter("email", email.toLowerCase().trim());
+            query.setParameter("password", password);
+            return query.uniqueResult();
+        }
+        catch (Exception e){
+            throw new Exception("can't find user record or session");
+        }
     }
 }
 
