@@ -32,7 +32,7 @@ public class JWTService {
         byte[] apiKeySecretBytes= DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey=new SecretKeySpec(apiKeySecretBytes,signatureAlgorithm.getJcaName());
 
-        //3:define claim(plyload)
+        //3:define claim
         Claims claims= Jwts.claims();
         claims.setId(String.valueOf(e.getId()));
         claims.setSubject(e.getName());
@@ -40,25 +40,24 @@ public class JWTService {
         claims.setIssuer(ISSUER);
         claims.setExpiration(new Date(System.currentTimeMillis()+EXPIRATION_TIME));
 
-//        List<Role> roles = e.getRoles();
-//        String allowedReadResources = "";
-//        String allowedCreateResources = "";
-//        String allowedUpdateResources = "";
-//        String allowedDeleteResources = "";
-//        String allowedResource = roles.stream().map(role -> role.getAllowedResource()).collect(Collectors.joining(","));
-//        claims.put("allowedResource", allowedResource);
-//        for (Role role : roles) {
-//            if (role.isAllowedRead()) allowedReadResources = String.join(role.getAllowedResource(), allowedReadResources, ",");
-//            if (role.isAllowedCreate()) allowedCreateResources = String.join(role.getAllowedResource(), allowedCreateResources, ",");
-//            if (role.isAllowedUpdate()) allowedUpdateResources = String.join(role.getAllowedResource(), allowedUpdateResources, ",");
-//            if (role.isAllowedDelete()) allowedDeleteResources = String.join(role.getAllowedResource(), allowedDeleteResources, ",");
-//        }
-//        claims.put("allowedReadResources", allowedReadResources.replaceAll(".$", ""));
-//        claims.put("allowedCreateResources", allowedCreateResources.replaceAll(".$", ""));
-//        claims.put("allowedUpdateResources", allowedUpdateResources.replaceAll(".$", ""));
-//        claims.put("allowedDeleteResources", allowedDeleteResources.replaceAll(".$", ""));
+        List<Role> roles = e.getRoles();
+        String allowedReadResources = "";
+        String allowedCreateResources = "";
+        String allowedUpdateResources = "";
+        String allowedDeleteResources = "";
+        String allowedResource = roles.stream().map(role -> role.getAllowedResource()).collect(Collectors.joining(","));
+        claims.put("allowedResource", allowedResource);//why we need this line
+        for (Role role : roles) {
+            if (role.isAllowedRead()) allowedReadResources = String.join(role.getAllowedResource(), allowedReadResources, ",");
+            if (role.isAllowedCreate()) allowedCreateResources = String.join(role.getAllowedResource(), allowedCreateResources, ",");
+            if (role.isAllowedUpdate()) allowedUpdateResources = String.join(role.getAllowedResource(), allowedUpdateResources, ",");
+            if (role.isAllowedDelete()) allowedDeleteResources = String.join(role.getAllowedResource(), allowedDeleteResources, ",");
+        }
+        claims.put("allowedReadResources", allowedReadResources.replaceAll(".$", ""));
+        claims.put("allowedCreateResources", allowedCreateResources.replaceAll(".$", ""));
+        claims.put("allowedUpdateResources", allowedUpdateResources.replaceAll(".$", ""));
+        claims.put("allowedDeleteResources", allowedDeleteResources.replaceAll(".$", ""));
 
-        //combine those three things above
         JwtBuilder builder=Jwts.builder().setClaims(claims).signWith(signatureAlgorithm,signingKey);
         //4 generate JWT
         return builder.compact();

@@ -31,12 +31,13 @@ public class SecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
         HttpServletRequest req=(HttpServletRequest) servletRequest;//once the request not based on httprequest
         int statusCode=authorization(req);
+        //if accepted, go to the next filter
         if(statusCode==HttpServletResponse.SC_ACCEPTED) filterChain.doFilter(servletRequest,servletResponse);
         else ((HttpServletResponse)servletResponse).sendError(statusCode);
 
-        //filterChain.doFilter(servletRequest,servletResponse);
 
     }
 
@@ -44,6 +45,7 @@ public class SecurityFilter implements Filter {
         int statusCode=HttpServletResponse.SC_UNAUTHORIZED;//401
         String uri=req.getRequestURI();
         String verb=req.getMethod();
+        //if it is log in
         if(IGNORED_PATHS.contains(uri)) return HttpServletResponse.SC_ACCEPTED;//202
 
         try{
@@ -53,7 +55,20 @@ public class SecurityFilter implements Filter {
             Claims claims=jwtService.decyptToken(token);
             if(claims.getId()!=null){
                 Employee e=employeeService.getEmployeeById(Long.valueOf(claims.getId()));
-                if(e !=null) statusCode=HttpServletResponse.SC_ACCEPTED;
+                if(e !=null) statusCode=HttpServletResponse.SC_ACCEPTED;//how to add message
+            }
+            String allowResources="/";
+            switch(verb){
+                case "GET" :allowResources=(String)claims.get("allowedReadResources"); break;
+                case "POST":allowResources=(String)claims.get("allowedCreateResources"); break;
+                case "PUT": allowResources=(String)claims.get("allowedUpdateResources");break;
+                case "DELETE":allowResources=(String)claims.get("allowDeleteResources");break;
+            }
+            for (String s:allowResources.split(",")){
+                if(uri.trim().toLowerCase().startsWith(s.trim().toLowerCase())){
+                    statusCode=HttpServletResponse.SC_ACCEPTED;
+                    break;
+                }
             }
         }catch (Exception e){
             //if token is null

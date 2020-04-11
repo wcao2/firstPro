@@ -1,9 +1,11 @@
 package com.ascendingdc.training.controller;
 
 import com.ascendingdc.training.model.Employee;
+import com.ascendingdc.training.model.views.JsView;
 import com.ascendingdc.training.service.EmployeeService;
 import com.ascendingdc.training.service.JWTService;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ public class AuthController {
     private Logger logger= LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="",method=RequestMethod.POST)
+    //@JsonView(JsView.Admin.class)
     //ResponseEntity return token and status code
     public ResponseEntity userLogin(@RequestBody Employee employee){//jackson Serialization only can do set(from postman)
         try {
@@ -33,12 +36,12 @@ public class AuthController {
             }else if(employee.getEmail()==null&&employee.getName()!=null){
                 emp=employeeService.getEmployeeByCredentials(employee.getName(),employee.getPassword());
             }else{
-                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();//HOW TO ADD A MESSAGE SEND TO FRONT
+                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("123123");//HOW TO ADD A MESSAGE SEND TO FRONT
             }
             //return token is json format
             if(emp==null) return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
             Map<String,String> map=new HashMap<>();
-            map.put("token",jwtService.generateToken(emp));
+            map.put("token",jwtService.generateToken(emp));//        call method in JWTService
             return ResponseEntity.ok().body(map);//body自带build function
         }catch (Exception e){
             e.printStackTrace();
