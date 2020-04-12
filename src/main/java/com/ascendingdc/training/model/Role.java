@@ -1,5 +1,9 @@
 package com.ascendingdc.training.model;
 
+import com.ascendingdc.training.model.views.JsView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,6 +17,7 @@ public class Role {
     @Column(name="id",columnDefinition = "SERIAL")
     private Long id;
     @Column(name = "name")
+    @JsonView({JsView.Admin.class})
     private String name;
     @Column(name = "allowed_resource")
     private String allowedResource;
@@ -26,6 +31,7 @@ public class Role {
     private boolean allowedDelete;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private List<Employee> employees;
 
     public Role() {

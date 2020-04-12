@@ -5,7 +5,7 @@ create table employees_roles(
 
 ALTER TABLE employees_roles
         ADD CONSTRAINT employee_fk FOREIGN KEY(employee_id)
-        REFERENCES employee(id);
+        REFERENCES employee(id)  on delete cascade;
 
 ALTER TABLE employees_roles
         ADD CONSTRAINT role_fk FOREIGN KEY(role_id)

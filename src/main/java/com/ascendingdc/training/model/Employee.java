@@ -2,6 +2,7 @@ package com.ascendingdc.training.model;
 
 import com.ascendingdc.training.model.views.JsView;
 import com.ascendingdc.training.model.views.JsView1;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.annotations.CreationTimestamp;
@@ -67,13 +68,11 @@ public class Employee {
     // @JsonIgnore
     @OneToMany(mappedBy = "employee",cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     @JsonView({JsView.Admin.class})
-   // @JsonView({DepartmentViews.Employee.class})
     private Set<Account> account;
 
-    @ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="employees_roles",joinColumns = {@JoinColumn(name="employee_id")},inverseJoinColumns = {@JoinColumn(name="role_id")})
+    @ManyToMany(cascade=CascadeType.ALL)//fetch=FetchType.EAGER
     @JsonView({JsView.Admin.class})
-    //@JsonIgnore
+    @JoinTable(name="employees_roles",joinColumns = {@JoinColumn(name="employee_id")},inverseJoinColumns = {@JoinColumn(name="role_id")})
     private List<Role> roles;
 
     public List<Role> getRoles() {

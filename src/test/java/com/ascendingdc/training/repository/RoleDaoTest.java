@@ -46,9 +46,9 @@ public class RoleDaoTest {
 
     @Test    //pass
     public void getRoleByIdTest(){
-        Role role=roleDao.getById(14L);
+        Role role=roleDao.getById(2L);
         Assert.assertNotNull(role);
-        Assert.assertEquals(14l, role.getId().longValue());
+        Assert.assertEquals(2l, role.getId().longValue());
     }
 
     @Test

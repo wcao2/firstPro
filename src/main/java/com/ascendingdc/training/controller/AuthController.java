@@ -1,7 +1,9 @@
 package com.ascendingdc.training.controller;
 
 import com.ascendingdc.training.model.Employee;
+import com.ascendingdc.training.model.Role;
 import com.ascendingdc.training.model.views.JsView;
+import com.ascendingdc.training.repository.RoleDao;
 import com.ascendingdc.training.service.EmployeeService;
 import com.ascendingdc.training.service.JWTService;
 
@@ -13,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,11 +25,11 @@ import java.util.Map;
 public class AuthController {
     @Autowired private EmployeeService employeeService;
     @Autowired private JWTService jwtService;
+    @Autowired private RoleDao roleDao;
 
     private Logger logger= LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="",method=RequestMethod.POST)
-    //@JsonView(JsView.Admin.class)
     //ResponseEntity return token and status code
     public ResponseEntity userLogin(@RequestBody Employee employee){//jackson Serialization only can do set(from postman)
         try {
@@ -36,7 +40,7 @@ public class AuthController {
             }else if(employee.getEmail()==null&&employee.getName()!=null){
                 emp=employeeService.getEmployeeByCredentials(employee.getName(),employee.getPassword());
             }else{
-                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("123123");//HOW TO ADD A MESSAGE SEND TO FRONT
+                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("please input email or username");
             }
             //return token is json format
             if(emp==null) return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
@@ -49,4 +53,23 @@ public class AuthController {
         //if there are any exception
         return ResponseEntity.badRequest().build();
     }
+    @RequestMapping(value = "/signup",method = RequestMethod.POST)
+    @JsonView(JsView.Admin.class)
+    public ResponseEntity userSignUp(@RequestBody Employee employee){
+        Employee emp=null;
+        if(employee.getEmail()==null||employee.getName()==null||employee.getPassword()==null){
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("please type necessary information");
+        }else{
+            List<Role> roles=new ArrayList<>();
+            Role r=roleDao.getById(2L);
+            roles.add(r);
+            employee.setRoles(roles);
+            Employee e=employeeService.save(employee,"R&D");
+            if(e==null) return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
+            return ResponseEntity.status(HttpServletResponse.SC_OK).body(e);
+            //return ResponseEntity.status(HttpServletResponse.SC_OK).build();
+        }
+    }
+
+
 }
