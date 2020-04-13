@@ -143,7 +143,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public Employee getEmployeeByCredentials(String email, String password) throws Exception {
-        String hql = "FROM Employee as e where (lower(e.email) = :email or lower(e.name) =:email) and e.password = :password";
+        String hql = "FROM Employee as e left join fetch e.roles where (lower(e.email) = :email or lower(e.name) =:email) and e.password = :password";
         //logger.debug(String.format("User email: %s, password: %s", email, password));
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Employee> query = session.createQuery(hql);
