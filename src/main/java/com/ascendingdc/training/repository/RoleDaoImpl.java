@@ -39,7 +39,7 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public List<Role> getRoles() {
         List<Role> roles=new ArrayList<>();
-        //In the HQL , you should use the java class name and property name of the mapped @Entity instead of the actual table name and column name
+        //In the HQL,should use the java class name and property name of the mapped @Entity instead of the actual table name and column name
         String hql="FROM Role";//class name
         Session session=HibernateUtil.getSessionFactory().openSession();
         try{
@@ -84,7 +84,7 @@ public class RoleDaoImpl implements RoleDao {
         Session session=HibernateUtil.getSessionFactory().openSession();
         try {
             transaction=session.beginTransaction();
-            Query<Department> query=session.createQuery(hql);
+            Query<Role> query=session.createQuery(hql);
             query.setParameter("Id",role.getId());
             deletedCount=query.executeUpdate();
             transaction.commit();
@@ -120,6 +120,19 @@ public class RoleDaoImpl implements RoleDao {
         }
 
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

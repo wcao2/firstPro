@@ -43,7 +43,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("please input email or username");
             }
             //return token is json format
-            if(emp==null) return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
+            if(emp==null) return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();//todo
             Map<String,String> map=new HashMap<>();
             map.put("token",jwtService.generateToken(emp));//        call method in JWTService
             return ResponseEntity.ok().body(map);//body自带build function
@@ -56,7 +56,7 @@ public class AuthController {
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
     @JsonView(JsView.Admin.class)
     public ResponseEntity userSignUp(@RequestBody Employee employee){
-        Employee emp=null;
+        Employee emp=null;//todo
         if(employee.getEmail()==null||employee.getName()==null||employee.getPassword()==null){
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("please type necessary information");
         }else{

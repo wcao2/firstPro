@@ -38,7 +38,7 @@ public class RoleDaoTest {
     }
 
     @Test  //pass
-    public void getDepartmentsTest(){
+    public void getRolesTest(){
         List<Role> roles=roleDao.getRoles();
         int expectedNum=4;
         Assert.assertEquals(expectedNum,roles.size());
