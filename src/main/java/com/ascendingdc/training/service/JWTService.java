@@ -45,15 +45,15 @@ public class JWTService {
         String allowedCreateResources = "";
         String allowedUpdateResources = "";
         String allowedDeleteResources = "";
-        String allowedResource = roles.stream().map(role -> role.getAllowedResource()).collect(Collectors.joining(","));
-        claims.put("allowedResource", allowedResource);//why we need this line
+        String allowedResource = roles.stream().map(role -> role.getAllowedResource()).collect(Collectors.joining(","));//why we need this line
+        claims.put("allowedResource",  allowedResource);//why we need this line
         for (Role role : roles) {
             if (role.isAllowedRead()) allowedReadResources = String.join(role.getAllowedResource(), allowedReadResources, ",");
             if (role.isAllowedCreate()) allowedCreateResources = String.join(role.getAllowedResource(), allowedCreateResources, ",");
             if (role.isAllowedUpdate()) allowedUpdateResources = String.join(role.getAllowedResource(), allowedUpdateResources, ",");
             if (role.isAllowedDelete()) allowedDeleteResources = String.join(role.getAllowedResource(), allowedDeleteResources, ",");
         }
-        claims.put("allowedReadResources", allowedReadResources.replaceAll(".$", ""));
+        claims.put("allowedReadResources", allowedReadResources.replaceAll(".$", ""));//??????????????
         claims.put("allowedCreateResources", allowedCreateResources.replaceAll(".$", ""));
         claims.put("allowedUpdateResources", allowedUpdateResources.replaceAll(".$", ""));
         claims.put("allowedDeleteResources", allowedDeleteResources.replaceAll(".$", ""));

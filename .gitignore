@@ -1,8 +1,5 @@
 *.iml
 target/
 .idea
-
-src/main/java/com/ascendingdc/training/DemoServlet.java
-src/main/java/com/ascendingdc/training/LoggerFilter.java
-
+note
 README.md

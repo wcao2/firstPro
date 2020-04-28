@@ -74,8 +74,7 @@ public class Employee {
     @JsonView({JsView.Admin.class})
     @JoinTable(name="employees_roles",joinColumns = {@JoinColumn(name="employee_id")},inverseJoinColumns = {@JoinColumn(name="role_id")})
     private List<Role> roles;
-
-    public List<Role> getRoles() {
+    public List<Role> getRoles() {//due to lazy, so getRole needs join fetch
         return roles;
     }
 

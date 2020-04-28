@@ -13,23 +13,30 @@ import java.io.File;
 
 @Service
 public class FileService {
-    private String defaultRegion="us-east-2";
-    private String bucketName="ascending-wei";
+    //private String defaultRegion="us-east-1";
+    private String bucketName="ascending-weicao";
     private Logger logger= LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmazonS3 s3Client;
     //用mock不会去真正调用第三方Amazon的API
 
-    public void uploadFile(File f){//1:54
-        //s3Client.putObject("ascending-wei","sampleFile.txt","this is first upload String file");
-        // Upload a file as a new object with ContentType and title specified.
-//        PutObjectRequest request = new PutObjectRequest(bucketName, file.getName(), file);
-//        s3Client.putObject(request);
-        //s3Client.putObject("ascending-wei","sampleFile.txt","helllo111 from here");
-        if(f!=null){
-            PutObjectRequest req=new PutObjectRequest(bucketName,f.getName(),f);
-            //System.out.println(f.getName());
+    //upload an Object using the AWS SDK for Java
+    public void uploadFile(File file){
+        //1.1 1.2
+        //AmazonS3 s3Client=AmazonS3ClientBuilder.standard().withRegion(defaultRegion).build();
+
+        //1.1 upload a file with specified content
+        //s3Client.putObject("ascending-weicao","sampleFile.txt","this is first upload String file");
+
+        //1.2 Upload a file as a new object with ContentType and title specified.
+        /*PutObjectRequest request = new PutObjectRequest(bucketName, file.getName(), file);
+        s3Client.putObject(request);*/
+
+        //1.2+
+        if(file!=null){
+            PutObjectRequest req=new PutObjectRequest(bucketName,file.getName(),file);
+            System.out.println(file.getName());
             s3Client.putObject(req);
         }else{
             logger.error("can not upload the file");

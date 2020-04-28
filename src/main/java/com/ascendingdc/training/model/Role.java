@@ -16,17 +16,23 @@ public class Role {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id",columnDefinition = "SERIAL")
     private Long id;
+
     @Column(name = "name")
     @JsonView({JsView.Admin.class})
     private String name;
+
     @Column(name = "allowed_resource")
     private String allowedResource;
+
     @Column(name = "allowed_read")
     private boolean allowedRead;
+
     @Column(name = "allowed_create")
     private boolean allowedCreate;
+
     @Column(name = "allowed_update")
     private boolean allowedUpdate;
+
     @Column(name = "allowed_delete")
     private boolean allowedDelete;
 
