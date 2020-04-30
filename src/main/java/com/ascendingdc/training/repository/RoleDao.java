@@ -10,4 +10,5 @@ public interface RoleDao {
     public abstract Role getById(Long id);
     public abstract int deleteById(Role role);
     public abstract int update(Role role);
+    public abstract Role getRoleByName(String roleName);
 }

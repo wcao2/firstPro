@@ -61,7 +61,7 @@ public class AuthController {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("please type necessary information");
         }else{
             List<Role> roles=new ArrayList<>();
-            Role r=roleDao.getById(2L);
+            Role r=roleDao.getRoleByName(Role.baseRole);
             roles.add(r);
             employee.setRoles(roles);
             Employee e=employeeService.save(employee,"R&D");

@@ -102,7 +102,6 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public int update(Role role) {
         Transaction transaction=null;
-        boolean isSuccess=true;
         Session session=HibernateUtil.getSessionFactory().openSession();
         try {
             transaction=session.beginTransaction();
@@ -112,13 +111,29 @@ public class RoleDaoImpl implements RoleDao {
             return 1;
         }
         catch (Exception e){
-            isSuccess=false;
             if(transaction!=null) transaction.rollback();
             session.close();
             logger.error("Failure to update record",e.getMessage());
             return 0;
         }
 
+    }
+
+    @Override
+    public Role getRoleByName(String roleName) {
+        String hql="FROM Role r where r.name=:Name";
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        try{
+            Query<Role> query=session.createQuery(hql);
+            query.setParameter("Name",roleName);
+            Role result=query.uniqueResult();
+            session.close();
+            return result;
+        }catch (HibernateException e){
+            logger.error("failure to retrieve data record",e);
+            session.close();
+            return null;
+        }
     }
 }
 
