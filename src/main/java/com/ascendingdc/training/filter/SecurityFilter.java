@@ -55,7 +55,7 @@ public class SecurityFilter implements Filter {
             Claims claims=jwtService.decyptToken(token);
             if(claims.getId()!=null){
                 Employee e=employeeService.getEmployeeById(Long.valueOf(claims.getId()));
-                if(e !=null) statusCode=HttpServletResponse.SC_ACCEPTED;//how to add message
+                if(e !=null) statusCode=HttpServletResponse.SC_ACCEPTED;//how to add message     //TODO
             }
             String allowResources="/";
             switch(verb){
@@ -65,9 +65,14 @@ public class SecurityFilter implements Filter {
                 case "DELETE":allowResources=(String)claims.get("allowDeleteResources");break;
             }
             for (String s:allowResources.split(",")){
-                if(uri.trim().toLowerCase().startsWith(s.trim().toLowerCase())){
-                    statusCode=HttpServletResponse.SC_ACCEPTED;
+                if(s.trim().isEmpty()){
+                    statusCode=HttpServletResponse.SC_UNAUTHORIZED;
                     break;
+                }else{
+                    if(uri.trim().toLowerCase().startsWith(s.trim().toLowerCase())){
+                        statusCode=HttpServletResponse.SC_ACCEPTED;
+                        break;
+                    }
                 }
             }
         }catch (Exception e){

@@ -66,4 +66,11 @@ public class RoleDaoTest {
         Assert.assertEquals(1,num);
     }
 
+    @Test
+    public void getRoleByNameTest(){
+        String roleName="user";
+        Role r=roleDao.getRoleByName(roleName);
+        Assert.assertEquals(r.getName(),roleName);
+    }
+
 }
