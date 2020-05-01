@@ -2,6 +2,7 @@ package com.ascendingdc.training.service;
 
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ascendingdc.training.init.AppBootstrap;
 import org.junit.Test;
@@ -9,8 +10,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -24,43 +28,67 @@ public class FileServiceTest {
 
     //verify mock has invoked putObject() method 1 time;
     @Autowired
-    private AmazonS3 s3Client;//一定是基于mock的对象 不会上传上去
+    private AmazonS3 s3Client;
 
     @Test
-    public void uploadFileTest(){
+    public void uploadFileTest1(){
+        //1:this is an integration test, should be rewrite to unit test
+        File testFile1=new File("/home/weicao/Downloads/sampleFile3.txt");
+        fileService.uploadFile(testFile1);
+    }
 
-        //2:把dependency injection的bean变成mock 在调用uploadFile时候 会验证bean在putobject会被调一次(s3Client.putObject(req))
-        //不需要 @Autowired private AmazonS3 s3Client;
-//        AmazonS3 s3Client=mock(AmazonS3.class);//创建一个新的AmazonS3 client
-//        s3Client.putObject("xxx","xxx","string of object");
-//        verify(s3Client,times(1)).putObject(anyString(),anyString(),anyString());
+    @Test
+    public void uploadFileTest2(){
+        AmazonS3 s3Client1=mock(AmazonS3.class);//创建一个新的AmazonS3 client
 
-        //3:real test
-        File testFile=mock(File.class);//不再需要找文件 则file一定不是null
-        //File t1= Mockito.mock(File.class);
+        s3Client1.putObject("xxx","xxx","string of object");
+        verify(s3Client1,times(1)).putObject(anyString(),anyString(),anyString());
+    }
 
-        //null 进来什么都不做
+    @Test
+    public void uploadFileTest3(){
+        File testFile=mock(File.class);
+        when(testFile.getName()).thenReturn("sample.txt");
+
         fileService.uploadFile(null);
         verify(s3Client,times(0)).putObject(any(PutObjectRequest.class));
-        //File testFile=new File("/home/weicao/Downloads/sampleFile1.txt");
-        when(testFile.getName()).thenReturn("sampleFile.txt");//stub: 总返回这个 不管怎么调用 为了执行service接下来的语句
         fileService.uploadFile(testFile);
+        verify(s3Client,times(1)).putObject(any(PutObjectRequest.class));
+    }
+
+
+
+    //real test
+    @Test
+    public void uploadFileTest() throws MalformedURLException, IOException {
+        //3
+        MultipartFile testFile=mock(MultipartFile.class);//不再需要找文件 则file一定不是null
+        ObjectMetadata mockData = mock(ObjectMetadata.class);
+        //File t1= Mockito.mock(File.class);
+        when(testFile.getInputStream()).thenReturn(mock(InputStream.class));
+        when(mockData.getContentType()).thenReturn("content-type");
+
+        //when(s3Client.getUrl(anyString(),anyString())).thenReturn(new URL("http","xxx",123,"xxx"));
+        when(testFile.getOriginalFilename()).thenReturn("sampleFile.txt");//stub: 总返回这个 不管怎么调用 为了执行service接下来的语句
+        fileService.uploadFile("XXX",testFile);
         //verify 基于mock的对象 而不是fileservice 里的s3Client
-        verify(s3Client,times(1)).putObject(any(PutObjectRequest.class));//spies:verify
-
-        //1.1
-        //fileService.uploadFile();
-
-        //1.2 this is an integration test, should be rewrite to unit test
-//        File testFile=new File("/home/weicao/Downloads/sampleFile3.txt");
-//        fileService.uploadFile(testFile);
+        verify(s3Client,times(1)).putObject(anyString(),anyString(),any(InputStream.class),any());//spies:verify
     }
 
     @Test
     //验证的是behavior
     public void getUrlTest() throws MalformedURLException {
         when(s3Client.getUrl(anyString(),anyString())).thenReturn(new URL("http","xxx",123,"xxx"));//调用toString()不会为空
-        fileService.getUrl("zhangsan3");
+        fileService.getUrl("xxx","xxx");
         verify(s3Client,times(1)).getUrl(anyString(),anyString());
     }
 }
+
+
+
+
+
+
+
+
+
