@@ -1,23 +1,42 @@
 package com.ascendingdc.training.util;
 
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernate.engine.spi.FilterDefinition;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.stat.Statistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.SynchronizationType;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
+@org.springframework.context.annotation.Configuration
 public class HibernateUtil {
     //SessionFactory is used to instantiate the session object
     private static SessionFactory sessionFactory;
     private static Logger logger= LoggerFactory.getLogger(HibernateUtil.class);
 
+    //@Bean
     public static SessionFactory getSessionFactory(){
+        //SessionFactory sessionFactory;
         //Singleton design pattern:sessionFactory
         if(sessionFactory==null){
             try {
@@ -53,17 +72,5 @@ public class HibernateUtil {
             }
         }
         return sessionFactory;
-    }
-
-    public static void main(String[] args) {
-        //For app, SessionFactory is singleton
-        //if there are two data source, then I have to SessionFactory, for every ds, sf is singleton, for app, it not
-        //configuration: include all info relates to data source(encapsulation)
-        SessionFactory sf=HibernateUtil.getSessionFactory();
-        //System.out.println("success update sf"+sf.hashCode());
-        logger.info("success update sf"+sf.hashCode());
-        //But I could create diff session
-        //for session, SessionFactory is a (factory) design pattern;
-        //Session s=sf.openSession();
     }
 }

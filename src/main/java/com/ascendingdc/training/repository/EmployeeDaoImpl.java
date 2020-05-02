@@ -5,6 +5,7 @@ import com.ascendingdc.training.model.Employee;
 import com.ascendingdc.training.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
@@ -23,13 +24,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private DepartmentDao departmentDao;
     private Logger logger= LoggerFactory.getLogger(getClass());
 
+//    @Autowired
+//    SessionFactory sessionFactory;
+
     @Override
     //pass
     public Employee save(Employee employee, String deptName) {
         Transaction transaction=null;
         Session session= HibernateUtil.getSessionFactory().openSession();
         try{
-                Department department=departmentDao.getDepartmentByName(deptName);//TODO
+                Department department=departmentDao.getDepartmentByName(deptName);
                 if(department!=null){
                     transaction=session.beginTransaction();
                     employee.setDepartment(department);

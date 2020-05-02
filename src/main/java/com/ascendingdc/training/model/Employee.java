@@ -78,6 +78,9 @@ public class Employee {
         return roles;
     }
 
+    @OneToMany(mappedBy = "employee")
+    private List<Image> image;
+
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }

@@ -16,8 +16,6 @@ import java.util.List;
 public class DepartmentController {
 
     @Autowired private DepartmentService departmentService;
-    //@Autowired private Logger logger;   TODO
-
 
     //{prefix}/departments GET        1:getDepartmentById(id)
     @RequestMapping(value="/{id}",method = RequestMethod.GET)    //pass variable 尽量用id
