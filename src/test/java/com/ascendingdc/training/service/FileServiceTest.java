@@ -61,15 +61,13 @@ public class FileServiceTest {
     //real test
     @Test
     public void uploadFileTest() throws MalformedURLException, IOException {
-        //3
         MultipartFile testFile=mock(MultipartFile.class);//不再需要找文件 则file一定不是null
         ObjectMetadata mockData = mock(ObjectMetadata.class);
         //File t1= Mockito.mock(File.class);
         when(testFile.getInputStream()).thenReturn(mock(InputStream.class));
         when(mockData.getContentType()).thenReturn("content-type");
-
-        //when(s3Client.getUrl(anyString(),anyString())).thenReturn(new URL("http","xxx",123,"xxx"));
         when(testFile.getOriginalFilename()).thenReturn("sampleFile.txt");//stub: 总返回这个 不管怎么调用 为了执行service接下来的语句
+
         fileService.uploadFile("XXX",testFile);
         //verify 基于mock的对象 而不是fileservice 里的s3Client
         verify(s3Client,times(1)).putObject(anyString(),anyString(),any(InputStream.class),any());//spies:verify

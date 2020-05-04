@@ -26,6 +26,7 @@ public class AWSConfig {
                 .build();
     }
 
+    //AmazonSQS client Bean
     @Bean
     public AmazonSQS getAmazonSQS(){
         return AmazonSQSClientBuilder.standard().withCredentials(new DefaultAWSCredentialsProviderChain()).withRegion(Regions.US_EAST_1).build();

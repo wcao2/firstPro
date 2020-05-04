@@ -16,7 +16,7 @@ public class ImageService {
         return imageDao.save(image);
     }
 
-    public int delByUserId(Long id){
+    public int delByEmployeeId(Long id){
         return imageDao.delByUserId(id);
     }
 

@@ -4,6 +4,7 @@ package com.ascendingdc.training.service;
 import com.ascendingdc.training.init.AppBootstrap;
 import com.ascendingdc.training.model.Department;
 import com.ascendingdc.training.repository.DepartmentDao;
+import com.ascendingdc.training.repository.DepartmentDaoImpl;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,42 +19,47 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AppBootstrap.class)
 public class DepartmentServiceTest {
-
-
     @Autowired
     private DepartmentService departmentService;
 
+    private Department d1;
+
     @Before
     public void init(){
+        d1=new Department();
+        d1.setName("depTest");
+        d1.setDescription("random desc");
+        d1.setLocation("US");
+        d1=departmentService.save(d1);
         System.out.println("================================start test===============================");
     }
 
     @After
     public void tearDown(){
+        departmentService.delete(d1.getId());
         System.out.println("================================finished test===============================");
     }
 
-    //must be remove ignore in Department
-    @Test
-    public void saveDepartment(){
-        Department department=new Department("entertainment","built by Jason","Xi'an China");
-        department=departmentService.save(department);
-        Assert.assertEquals("entertainment",department.getName());
-    }
+//    //must be remove ignore in Department
+//    @Test
+//    public void saveDepartment(){
+//        Department department=new Department("entertainment","built by Jason","Xi'an China");
+//        department=departmentService.save(department);
+//        Assert.assertEquals("entertainment",department.getName());
+//    }
 
-    @Test  //TODO
-    public void deleteDepartment(){
-        Department department=departmentService.getDepartmentByName("entertainment");
-        Long id=department.getId();
-        boolean var=departmentService.delete(id);
-        Assert.assertTrue(var);
-    }
+//    @Test
+//    public void deleteDepartment(){
+//        Department department=departmentService.getDepartmentByName("entertainment");
+//        Long id=department.getId();
+//        boolean var=departmentService.delete(id);
+//        Assert.assertTrue(var);
+//    }
 
     @Test
     public void getDepartmentTest(){
         List<Department> departments=departmentService.getDepartmentsEager();
-        int expectedNumofDept=2;
-        Assert.assertEquals(expectedNumofDept,departments.size());
+        Assert.assertEquals(3,departments.size());
     }
 
     @Test

@@ -55,15 +55,36 @@ public class ImageDaoTest {
 
     @Test
     public void getByEmployeeIdTest(){
-        Employee employee = employeeService.getEmployeeByName(testEmployee.getName());
-        List<Image> images=imageDao.getByEmployeeId(employee.getId());
+        List<Image> images=imageDao.getByEmployeeId(testEmployee.getId());
         Assert.assertEquals(1,images.size());
     }
 
     @Test
-    public void delByUserIdTest(){
+    public void delByEmployeeIdTest(){
         Employee employee = employeeService.getEmployeeByName("JinPing");
         int i = imageDao.delByUserId(employee.getId());
-        Assert.assertEquals(1,i);
+        Assert.assertEquals(0,i);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,18 +46,22 @@ public class SecurityFilter implements Filter {
         int statusCode=HttpServletResponse.SC_UNAUTHORIZED;//401
         String uri=req.getRequestURI();
         String verb=req.getMethod();
+        HttpSession session=req.getSession();
         //if it is log in
         if(IGNORED_PATHS.contains(uri)) return HttpServletResponse.SC_ACCEPTED;//202
 
         try{
-            String token=req.getHeader("Authorization").replaceAll("^(.*?) ","");
+            String token=req.getHeader("Authorization").replaceAll("^(.*?) ","");//?作用
             if(token==null||token.isEmpty()) return statusCode;
 
             Claims claims=jwtService.decyptToken(token);
-            if(claims.getId()!=null){
-                Employee e=employeeService.getEmployeeById(Long.valueOf(claims.getId()));
-                if(e !=null) statusCode=HttpServletResponse.SC_ACCEPTED;//how to add message     //TODO
+            Employee e=employeeService.getEmployeeById(Long.valueOf(claims.getId()));
+            if(e ==null){
+                statusCode=HttpServletResponse.SC_UNAUTHORIZED;
+            } else{
+                session.setAttribute("EmployeeId",e.getId());
             }
+
             String allowResources="/";
             switch(verb){
                 case "GET" :allowResources=(String)claims.get("allowedReadResources"); break;

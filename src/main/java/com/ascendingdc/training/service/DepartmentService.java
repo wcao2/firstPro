@@ -49,8 +49,6 @@ public class DepartmentService {
 
     public boolean update(Department dep){return departmentDao.update(dep);}
 
-
-
 }
 
 

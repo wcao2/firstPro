@@ -22,7 +22,7 @@ public class AWSConfigTest {
 
     @Bean
     public AmazonSQS getAmazonSQS(){
-        return AmazonSQSClientBuilder.standard().withCredentials(new DefaultAWSCredentialsProviderChain()).withRegion(Regions.US_EAST_1).build();
+        return mock(AmazonSQS.class);
     }
 }
 
