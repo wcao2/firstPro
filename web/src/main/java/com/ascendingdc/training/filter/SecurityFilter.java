@@ -5,6 +5,7 @@ import com.ascendingdc.training.service.EmployeeService;
 import com.ascendingdc.training.service.JWTService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -32,6 +33,10 @@ public class SecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+        if (employeeService == null) {
+            SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, servletRequest.getServletContext());
+        }
 
         HttpServletRequest req=(HttpServletRequest) servletRequest;//once the request not based on httprequest
         int statusCode=authorization(req);

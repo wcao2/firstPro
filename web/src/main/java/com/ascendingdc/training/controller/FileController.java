@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value={"/files"})
@@ -44,10 +46,17 @@ public class FileController {
         String s3Key=fileService.uploadFile("ascending-weicao",file);
         Image image=new Image(file.getOriginalFilename(), s3Key, LocalDateTime.now(), employee);
         imageService.save(image);//save to local db
-        messageService.sendMessage(image.toString(),5);
+        Map map=new HashMap();
+        map.put("id",image.getId());
+        map.put("email",employee.getEmail());
+        map.put("fileName",image.getFileName());
+        map.put("s3Key",image.getS3Key());
+        map.put("time",image.getCreateTime().toString());
+        messageService.sendMessage(map.toString(),5);
         return s3Key;
     }
 }
+
 
 
 
